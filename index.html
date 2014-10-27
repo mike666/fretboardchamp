@@ -1,0 +1,95 @@
+<!doctype html>
+<html  lang="en">
+
+ <head>
+  <meta charset="utf-8">
+     
+  <style>
+   html, body{margin:0;padding:0}
+   body{background-color:#000;color:#fff;font-size:12px;}
+   button{cursor:pointer;}
+   #page{font-family:verdana, sans-serif;padding: 20px 0 0 0;}
+   #page h1{padding:0;margin:0 0 15px 0;text-align:center;}
+   #note-speed{text-align:center;}
+   #note-display{font-size:45px;margin: 0 auto;margin-top:10%;text-align:center;padding: 30px;}
+  </style>
+  
+  <script>
+   
+   // Properties...
+   
+   var _Notes = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]; 
+   var _SpeedSeconds = 2;
+   var _Timer;
+   var _CurrentNote;
+   
+   // Functions...
+   
+   // update main screen with the provided text.
+   function updateScreen(text){
+    document.getElementById("note-display").innerHTML = text;
+   }
+   
+   // Cycle through each note randomly
+   function cycleNotes(){
+    _Timer = setTimeout(function(){
+      updateScreen(getRandomNote());
+      cycleNotes(_Notes);
+    }, _SpeedSeconds * 1000);
+   }
+   
+   // Clear the recursive cycle
+   function stopCycle(){
+    if(_Timer){
+     clearTimeout(_Timer);
+    }
+   }
+   
+   // Reset the cycle speed and restart the recursive cycle
+   function resetSpeed(seconds){
+    updateScreen("Ready...");
+    
+    stopCycle();
+                  
+     _SpeedSeconds = seconds;
+
+    setTimeout(function(){
+     _CurrentNote = "";
+     updateScreen(getRandomNote());
+     cycleNotes();
+    }, 2000);         
+   }
+   
+   // Return a random note from the note array
+   function getRandomNote(){
+    var newNote = _Notes[randomIntFromInterval(0, 11)];
+    
+    if(newNote == _CurrentNote){
+     return getRandomNote();
+    }
+        
+    _CurrentNote = newNote;
+    
+    return newNote;
+   }
+   
+   // Return a random number
+   function randomIntFromInterval(min,max){
+     return Math.floor(Math.random()*(max-min+1)+min);
+   }
+  </script>
+  
+ </head>
+ <body>
+  <div id="page">
+   <h1>Guitar Fretboard Exercise</h1>
+   <div id="note-speed">
+    <form>
+     <label for="field-speed">Speed (seconds): </label> <input type="text" id="field-speed" name="" value=""> <button onclick="resetSpeed(document.getElementById('field-speed').value);return false;">Set speed</button>
+    </form>
+   </div>
+   <div id="note-display"></div>
+  </div> 
+      
+ </body>
+</html>
